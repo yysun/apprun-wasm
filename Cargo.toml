@@ -1,0 +1,16 @@
+[package]
+name = "apprun-rust-wasm"
+version = "0.1.0"
+authors = ["Yiyi Sun <yiyisun@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[profile.release]
+lto = true
+
+[dependencies]
+wasm-bindgen = "0.2.60"
