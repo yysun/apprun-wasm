@@ -1,9 +1,20 @@
 import app from 'apprun';
-import('../pkg').catch(e => console.log(e));
+
+let mod;
+import('../pkg')
+  .then(m => mod = m)
+  .catch(e => console.log(e));
+
+const test = () => mod.render(document.getElementById('p'), [{
+  tag: 'div',
+  props: { id: '1' },
+  children: []
+}])
+
 
 const model = 'Hello world - AppRun !';
 
-const view = (state) => <div>
+const view = (state) => <div id="p" onclick={test}>
   <h1>{state}</h1>
 </div>;
 
