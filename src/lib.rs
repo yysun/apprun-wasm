@@ -1,6 +1,9 @@
-// #![no_std]
+
 use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 use web_sys::HtmlElement;
+use web_sys::SvgElement;
+use js_sys::Reflect;
 
 #[wasm_bindgen]
 extern "C" {
@@ -9,26 +12,57 @@ extern "C" {
 
   #[wasm_bindgen(js_namespace = app)]
   fn run(event: &str, p: &str);
+}
 
-  // pub type VNode;
-
-  // #[wasm_bindgen(method, getter)]
-  // fn tag(this: &VNode) -> String;
-
-  // // fn props(this: &VNode) -> Map;
-
-  // // fn children(this: &VNode) -> vec!<VDOM>;
-
+fn console_log(m: &str) {
+  log(&JsValue::from_str(&m));
 }
 
 #[wasm_bindgen]
 pub fn render(element: HtmlElement, vdom: Vec<JsValue>) -> Result<(), JsValue> {
-
   log(&element);
-  for item in vdom {
-    let tag = js_sys::Reflect::get(&item, &JsValue::from_str("tag"))?;
-    log(&tag);
+  for vnode in vdom {
+    match vnode {
+      vnode if vnode.is_string() => create_text(&element, &vnode),
+      vnode if vnode.is_instance_of::<HtmlElement>()
+            || vnode.is_instance_of::<SvgElement>() => insert_element(&element, &vnode),
+      _ => create_element(&element, &vnode)
+    }
   }
-
   Ok(())
+}
+
+fn create_text(element: &HtmlElement, text: &JsValue) {
+  console_log("vdom: create text:");
+  log(&text);
+}
+
+fn insert_element(element: &HtmlElement, vnode: &JsValue) {
+  console_log("vdom: insert element:");
+  log(&vnode);
+}
+
+fn create_element(element: &HtmlElement, vnode: &JsValue) {
+  console_log("vdom: create element:");
+  log(&vnode);
+  match Reflect::get(&vnode, &JsValue::from_str("tag")) {
+    Ok(tag) => {
+      if tag.is_undefined() {
+        console_log("unknow tag")
+      } else {
+        log(&tag);
+      }
+    },
+    _ => console_log("unknow vnode")
+  }
+}
+
+fn update_element(element: &HtmlElement, vnode: &JsValue, is_svg: &bool) {
+  console_log("vdom: update element:");
+  log(&vnode);
+}
+
+fn update_element_props(element: &HtmlElement, vnode: &JsValue, is_svg: &bool) {
+  console_log("vdom: update element props:");
+  log(&vnode);
 }
