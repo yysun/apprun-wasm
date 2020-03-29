@@ -38,6 +38,33 @@ pub fn render(element: HtmlElement, vdom: Vec<JsValue>) -> Result<(), JsValue> {
   Ok(())
 }
 
+
+fn window() -> web_sys::Window {
+  web_sys::window().expect("no global `window` exists")
+}
+
+fn document() -> web_sys::Document {
+  window().document().expect("should have a document on window")
+}
+
+// fn body() -> web_sys::HtmlElement {
+//   document().body().expect("document should have a body")
+// }
+
+// fn request_animation_frame(f: &Closure<dyn FnMut()>) {
+//   window().request_animation_frame(f.as_ref().unchecked_ref())
+//     .expect("should register `requestAnimationFrame` OK");
+// }
+
+fn update_element(element: &HtmlElement, vnode: &JsValue, is_svg: &bool) {
+  console_log!("vdom: update element:");
+  log(&vnode);
+}
+
+fn update_children (element: &HtmlElement, vdom: Vec<JsValue>) {
+
+}
+
 fn create_text(element: &HtmlElement, text: &JsValue) {
   console_log!("vdom: create text:");
   log(&text);
@@ -49,8 +76,7 @@ fn insert_element(element: &HtmlElement, vnode: &JsValue) {
 }
 
 fn try_create_element(element: &HtmlElement, vnode: &JsValue) {
-  console_log!("vdom: create element:");
-  log(&vnode);
+  // console_log!("vdom: create element:");
   match Reflect::get(&vnode, &JsValue::from_str("tag")) {
     Ok(tag) => {
       if tag.is_undefined() {
@@ -68,14 +94,10 @@ fn try_create_element(element: &HtmlElement, vnode: &JsValue) {
 }
 
 fn create_element(element: &HtmlElement, tag: &JsValue, vnode: &JsValue) {
-  console_log!("vdom: create element:");
-  log(&tag);
-  log(&vnode);
-}
-
-fn update_element(element: &HtmlElement, vnode: &JsValue, is_svg: &bool) {
-  console_log!("vdom: update element:");
-  log(&vnode);
+  // console_log!("vdom: create element:");
+  let name = &*format!("{}", tag.as_string().unwrap());
+  let el = document().create_element(&name).unwrap();
+  element.append_child(&el).expect(&*format!("cannot create element{}", &name));
 }
 
 fn update_element_props(element: &HtmlElement, vnode: &JsValue, is_svg: &bool) {
