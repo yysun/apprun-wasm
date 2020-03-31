@@ -4,13 +4,10 @@ This is the Virtual DOM of [AppRun](https://github.com/yysun/apprun) ported to W
 
 > To use this template, you need the [Rust](https://www.rust-lang.org/tools/install) tool chain, and [wasm-pack](https://rustwasm.github.io/wasm-pack/) installed first.
 
-### Install
 
-```
-npm i apprun-wasm
-```
+## This project is currently being worked on and is not ready for use!!!
 
-### Use
+### To developers
 
 In JavaScript/TypeScript
 

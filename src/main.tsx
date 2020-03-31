@@ -5,13 +5,11 @@ import('../pkg')
   .then(m => mod = m)
   .catch(e => console.log(e));
 
-
 const test_data = {
   tag: 'div'
 }
 
-const more_data = new Array(10000).fill(test_data);
-
+const more_data = new Array(10).fill(test_data);
 
 const vdom = [
   0,
