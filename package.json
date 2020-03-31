@@ -13,7 +13,7 @@
   "license": "ISC",
   "devDependencies": {
     "@wasm-tool/wasm-pack-plugin": "^1.2.0",
-    "apprun": "^2.23.7",
+    "apprun": "^2.23.9",
     "source-map-loader": "^0.2.4",
     "ts-loader": "^6.2.2",
     "typescript": "^3.8.3",
