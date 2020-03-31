@@ -7,48 +7,62 @@ import('../pkg')
 
 
 const test_data = {
-  tag: 'div',
-  // props: { id: '1' },
-  // children: [{
-  //   tag: 'button',
-  //   props: { onclick: () => { }}
-  // }]
+  tag: 'div'
 }
 
 const more_data = new Array(10000).fill(test_data);
 
-const test = () => mod.render(document.getElementById('p'), [
-  'hi',
+
+const vdom = [
+  0,
+  100,
+  true,
+  false,
+  'a string',
+  { t: 'an object', a: 100 },
   document.createElement('h1'),
   {
+    tag: 'h2',
+    children: ['title 2']
+  },
+  {
     tag: 'section',
-    props: { id: '1' },
-    children: [{
-      tag: 'p',
-      props: { style: {color: 'red'} }
-
-    }]
   },
   {
     tag: 'div',
-    props: { id: '1' },
+    props: { id: '2' },
     children: [{
       tag: 'button',
-      props: { onclick: () => { }}
+      props: { onclick: () => { } },
+      children: ['button 1']
     }]
   },
-  100,
-  { a: 100 }
-])
+];
 
 const test_js = () => {
+  vdom.forEach((e, i) => {
+    console.log("js test case: ", i);
+    app.render(document.getElementById('p'), [e as any])
+  });
+  app.render(document.getElementById('p'), vdom as any)
+}
+
+const test_wasm = () => {
+  vdom.forEach((e, i) => {
+    console.log("wasm test case: ", i);
+    mod.render(document.getElementById('p'), [e])
+  });
+  mod.render(document.getElementById('p'), vdom)
+}
+
+const test_js_many = () => {
   const startTime = performance.now();
   app.render(document.getElementById('p'), more_data);
   const stop = performance.now();
   console.log("js_test took " + (stop - startTime));
 }
 
-const test_wasm = () => {
+const test_wasm_many = () => {
   const startTime = performance.now();
   mod.render(document.getElementById('p'), more_data);
   const stop = performance.now();
@@ -59,9 +73,10 @@ const model = 'Hello world - AppRun !';
 
 const view = (state) => <div >
   <h1>{state}</h1>
-  <button onclick={test}>simple test</button>
-  <button onclick={test_js}>JS test x10000 divs</button>
-  <button onclick={test_wasm}>WASM test x1000 divs</button>
+  <button onclick={test_js}>test js</button>
+  <button onclick={test_wasm}>test wasm</button>
+  <button onclick={test_js_many}>JS test x10000 divs</button>
+  <button onclick={test_wasm_many}>WASM test x1000 divs</button>
   <div id="p"></div>
 </div>;
 
